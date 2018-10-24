@@ -1,13 +1,15 @@
 # Git bash for windows powerline theme
+### Forked from desire/git_bash_windwos_powerline
 
-Light & simple powerline theme for Git bash for windows
+Light & simple powerline theme for Git bash for windows (Thanks to desire for his git_bash_windows_powerline)
 
-![ScreenShot](screenshot.png)
+This is my personalization of desire's powerline for windows.
 
+...screenshot coming later...
 
 ## Install:
 
-I recommend the following:
+As desire reccomends:
 
 ```bash
 cd $HOME
@@ -15,7 +17,7 @@ mkdir -p .bash/themes/git_bash_windows_powerline
 git clone https://github.com/diesire/git_bash_windows_powerline.git .bash/themes/git_bash_windows_powerline
 ```
 
-then add the following to your .bashrc:
+and then add the following to your .bashrc:
 
 ```bash
 # Theme
