@@ -9,7 +9,7 @@ This is my personalization of desire's powerline for windows.
 
 ## Install:
 
-As desire reccomends:
+As desire recomends:
 
 ```bash
 cd $HOME
