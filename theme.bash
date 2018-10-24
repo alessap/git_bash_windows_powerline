@@ -9,10 +9,13 @@
 
 PROMPT_CHAR=${POWERLINE_PROMPT_CHAR:=""}
 POWERLINE_LEFT_SEPARATOR=" "
-POWERLINE_PROMPT="last_status user_info cwd scm"
+POWERLINE_PROMPT="datetime user_info cwd virtualenv scm last_status"
+
 
 USER_INFO_SSH_CHAR=" "
-USER_INFO_PROMPT_COLOR="C B"
+USER_INFO_PROMPT_COLOR="C Bl"
+
+DATETIME_PROMPT_COLOR="W Bl"
 
 SCM_GIT_CHAR=" "
 SCM_PROMPT_CLEAN=""
@@ -27,7 +30,9 @@ SCM_PROMPT_STAGED_COLOR="Y Bl"
 SCM_PROMPT_UNSTAGED_COLOR="R Bl"
 SCM_PROMPT_COLOR=${SCM_PROMPT_CLEAN_COLOR}
 
-CWD_PROMPT_COLOR="B C"
+CWD_PROMPT_COLOR="B Bl"
+
+NEWLINE_PROMPT_COLOR="B C"
 
 STATUS_PROMPT_COLOR="Bl R B"
 STATUS_PROMPT_ERROR="✘"
@@ -36,6 +41,8 @@ STATUS_PROMPT_ROOT="⚡"
 STATUS_PROMPT_ROOT_COLOR="Bl Y B"
 STATUS_PROMPT_JOBS="●"
 STATUS_PROMPT_JOBS_COLOR="Bl Y B"
+
+VIRTUALENV_COLOR="Y Bl B"
 
 function __color {
   local bg
@@ -73,6 +80,20 @@ function __color {
   # Control codes enclosed in \[\] to not polute PS1
   # See http://unix.stackexchange.com/questions/71007/how-to-customize-ps1-properly
   echo "\[\e[${mod};${fg};${bg}m\]"
+}
+
+function __powerline_newline_prompt {
+  local newline=""
+  local color=${NEWLINE_PROMPT_COLOR}
+  newline="\n$POWERLINE_LEFT_SEPARATOR"
+  echo "${newline}|${color} "
+}
+
+function __powerline_datetime_prompt {
+  local datetime=""
+  local color=${DATETIME_PROMPT_COLOR}
+  datetime="`date '+%Y-%m-%d %H:%M:%S'`"
+  echo "${datetime}|${color}"
 }
 
 function __powerline_user_info_prompt {
@@ -193,6 +214,25 @@ function __powerline_left_segment {
   (( SEGMENTS_AT_LEFT += 1 ))
 }
 
+function __powerline_virtualenv_prompt {
+  local virtualenv=""
+  [[ -n "$VIRTUAL_ENV" ]] && virtualenv="($(basename $VIRTUAL_ENV))"
+  # [[ $last_status -ne 0 ]] && virtualenv+="$(__color ${STATUS_PROMPT_ERROR_COLOR})${STATUS_PROMPT_ERROR}"
+  # [[ $virtualenv -ne 0 ]] && virtualenv="("$virtualenv")"
+
+  [[ -n "$VIRTUAL_ENV" ]] && echo "$virtualenv|$VIRTUALENV_COLOR}"
+}
+
+function __powerline_last_status_newline_prompt {
+  local symbols=()
+  [[ $last_status -ne 0 ]] && symbols+="$(__color ${STATUS_PROMPT_ERROR_COLOR})${STATUS_PROMPT_ERROR}"
+  [[ $UID -eq 0 ]] && symbols+="$(__color ${STATUS_PROMPT_ROOT_COLOR})${STATUS_PROMPT_ROOT}"
+  [[ $(jobs -l | wc -l) -gt 0 ]] && symbols+="$(__color ${STATUS_PROMPT_JOBS_COLOR})${STATUS_PROMPT_JOBS}"
+  symbols+="$(__color ${POWERLINE_LEFT_SEPARATOR})"
+
+  [[ -n "$symbols" ]] && echo "\n$symbols|${STATUS_PROMPT_COLOR}\n"
+}
+
 function __powerline_last_status_prompt {
   local symbols=()
   [[ $last_status -ne 0 ]] && symbols+="$(__color ${STATUS_PROMPT_ERROR_COLOR})${STATUS_PROMPT_ERROR}"
@@ -217,8 +257,7 @@ function __powerline_prompt_command {
   done
 
   [[ -n "${LEFT_PROMPT}" ]] && LEFT_PROMPT+="$(__color - ${LAST_SEGMENT_COLOR})${separator_char}$(__color)"
-  PS1="${LEFT_PROMPT} "
-
+  PS1="${LEFT_PROMPT}\n"
   ## cleanup ##
   unset LAST_SEGMENT_COLOR \
         LEFT_PROMPT \
