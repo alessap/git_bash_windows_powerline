@@ -217,10 +217,9 @@ function __powerline_left_segment {
 function __powerline_virtualenv_prompt {
   local virtualenv=""
   [[ -n "$VIRTUAL_ENV" ]] && virtualenv="($(basename $VIRTUAL_ENV))"
-  # [[ $last_status -ne 0 ]] && virtualenv+="$(__color ${STATUS_PROMPT_ERROR_COLOR})${STATUS_PROMPT_ERROR}"
-  # [[ $virtualenv -ne 0 ]] && virtualenv="("$virtualenv")"
-
   [[ -n "$VIRTUAL_ENV" ]] && echo "$virtualenv|$VIRTUALENV_COLOR}"
+  [[ -n "$CONDA_DEFAULT_ENV" ]] && virtualenv="($(basename $CONDA_DEFAULT_ENV))"
+  [[ -n "$CONDA_DEFAULT_ENV" ]] && echo "$virtualenv|$VIRTUALENV_COLOR}"
 }
 
 function __powerline_last_status_newline_prompt {
