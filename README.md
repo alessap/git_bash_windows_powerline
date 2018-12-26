@@ -14,7 +14,7 @@ As diesire recomends:
 ```bash
 cd $HOME
 mkdir -p .bash/themes/git_bash_windows_powerline
-git clone https://github.com/diesire/git_bash_windows_powerline.git .bash/themes/git_bash_windows_powerline
+git clone https://github.com/alessap/git_bash_windows_powerline.git .bash/themes/git_bash_windows_powerline
 ```
 
 and then add the following to your .bashrc:
